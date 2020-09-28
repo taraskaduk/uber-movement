@@ -3,6 +3,17 @@ library(osmdata)
 library(lubridate)
 library(gganimate)
 library(tidyverse)
+library(extrafont)
+
+loadfonts()
+
+theme_tk <- theme_void() +
+  theme(plot.title = element_text(size=30, 
+                                  vjust=1, 
+                                  family="Raleway",
+                                  face = "bold"))
+
+theme_set(theme_tk)
 
 # files <- list.files("data/raw/monthly")
 # for (i in files) {
@@ -265,13 +276,11 @@ speeds_by_street_byhour_geo <- speeds_bystreet_byhour %>%
 hours <- c(0:23)
 for (h in hours){
   ggplot()+
-    #geom_sf(data=boundary, fill="grey99")+
+    geom_sf(data=boundary, fill="grey99")+
     geom_sf(data=speeds_by_street_byhour_geo %>% filter(hour == h), 
             aes(geometry = geometry,
-                col=delay_pct,
-                group=index), 
+                col=delay_pct), 
             size=0.3) +
-    theme_void() +
     scale_colour_viridis_b(
       breaks = c(0,0.25,0.5,1,2,5,10,25),
       na.value = "grey50",
@@ -279,18 +288,18 @@ for (h in hours){
       option = "magma",
       limits = c(0, 2), 
       oob = scales::squish,
-      direction = -1)
-  ggsave(paste0(h,".png"))
+      direction = -1) +
+    labs(title = paste0("Kyiv city traffic delay, ", str_pad(h,2,"left",0),":00"),
+         caption = "taraskaduk.com | @taraskaduk")
+  
+  ggsave(paste0("output/", str_pad(h,2,"left",0),".png"))
 }
 
-
-
-p <- ggplot()+
-  #geom_sf(data=boundary, fill="grey99")+
+ggplot()+
+  geom_sf(data=boundary, fill="grey99")+
   geom_sf(data=speeds_by_street_byhour_geo, 
           aes(geometry = geometry,
-              col=delay_pct,
-              group=index), 
+              col=delay_pct), 
           size=0.3) +
   theme_void() +
   scale_colour_viridis_b(
@@ -301,12 +310,31 @@ p <- ggplot()+
     limits = c(0, 2), 
     oob = scales::squish,
     direction = -1) +
-  labs(title = 'Hour: {frame_time}')+ 
-  transition_time(hour)+ ease_aes('linear')
+  facet_wrap(~hour, ncol = 4)
+
+ggsave("facet.png")
+
+p <- ggplot()+
+  #geom_sf(data=boundary, fill="grey99")+
+  geom_sf(data=speeds_by_street_byhour_geo, 
+          aes(geometry = geometry,
+              col=delay_pct), 
+          size=0.3) +
+  theme_void() +
+  scale_colour_viridis_b(
+    breaks = c(0,0.25,0.5,1,2,5,10,25),
+    na.value = "grey50",
+    guide = "coloursteps",
+    option = "magma",
+    limits = c(0, 2), 
+    oob = scales::squish,
+    direction = -1) +
+  labs(title = 'Hour: {frame_time}') + 
+  transition_time(hour)
 
 animate(p, 
-        # duration = 5, 
-        # fps = 20, 
+        duration = 48, 
+        fps = 0.5, 
         # width = 200, 
         # height = 200, 
         renderer = gifski_renderer())
