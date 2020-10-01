@@ -286,7 +286,7 @@ p <- ggplot()+
   geom_sf(data= plot_streets,
           col="#3B5268",
           size=0.1) +
-  geom_sf(data=plot_speeds %>% head(10000),
+  geom_sf(data=plot_speeds,
           aes(geometry = geometry,
               col=delay_pct, 
               group = index), 
@@ -301,18 +301,21 @@ p <- ggplot()+
     limits = c(0, 2.5), 
     oob = scales::squish,
     direction = -1) +
-  labs(title = paste0("Kyiv city traffic delay, ", str_pad("{closest_state}",2,"left",0),":00"),
+  labs(title = paste0("Kyiv city traffic delay, ", str_pad("{current_frame}",2,"left",0),":00"),
        caption = "taraskaduk.com | @taraskaduk",
        color = "Traffic Delay, %") +
   theme(legend.text = element_text(size = 7)) +
-  transition_states(hour)
+  transition_manual(hour)
 
-animate(p, 
-        duration = 48, 
-        fps = 0.5, 
-        # width = 200, 
-        # height = 200, 
-        renderer = gifski_renderer())
+animate(p)
+
+# animate(p, 
+#         duration = 48, 
+#         fps = 0.5, 
+#         width = 200,
+#         height = 200,
+#         renderer = gifski_renderer()
+#         )
 anim_save("test.gif")
 
 ggplot()+
