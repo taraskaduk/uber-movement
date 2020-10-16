@@ -6,24 +6,20 @@ library(tidyverse)
 library(extrafont)
 
 loadfonts()
-
 theme_tk <- theme_void() +
   theme(plot.background = element_rect(fill="#F3F6F7",
                                        colour = "#F3F6F7"),
         panel.background = element_rect(fill="#F3F6F7",
                                         colour = "#F3F6F7"),
         plot.title = element_text(size=32, 
-                                  #vjust=1, 
                                   family="Raleway"),
         plot.caption = element_text(size=14, 
-                                    #vjust=1, 
                                     family="Raleway"),
         legend.title = element_text(family="Raleway"),
         legend.text = element_text(family="Raleway"),
         legend.position="bottom",
         plot.margin = unit(c(1,0,1,0), units = "cm")
         )
-
 theme_set(theme_tk)
 
 # files <- list.files("data/raw/monthly")
@@ -204,6 +200,9 @@ speeds_expanded_geo <- speeds_expanded %>%
 
 hours <- c(0:23)
 options <- c("full", "circle1", "circle2")
+
+hours <- 18
+options <- "circle2"
 
 for (option in options){
   if (option == "full"){
