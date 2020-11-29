@@ -4,7 +4,7 @@ library(lubridate)
 library(tidyverse)
 
 
-load("data/kyiv_osm.RData")
+load(url("https://github.com/taraskaduk/kyiv_osm/blob/main/kyiv_osm.RData?raw=true"))
 
 
 # This the CLI command for pulling geometries
@@ -45,7 +45,7 @@ streets_lengths <- streets %>%
          length = length/1000)
 st_geometry(streets_lengths) <- NULL
 
-saveRDS(streets, "data/kyiv_streets.RDS")
+saveRDS(streets, "output/kyiv_streets.RDS")
 
 # ggplot()+
 #   geom_sf(data=boundary, col = "red")+
