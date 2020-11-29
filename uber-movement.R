@@ -81,4 +81,4 @@ speeds_delay <- speeds %>%
   mutate(best_time = if_else(max_speed < speed_kph_mean, time, length/max_speed),
          delay = time - best_time)
 
-saveRDS(speeds_delay, "data/kyiv_speeds_delay.RDS")
+saveRDS(speeds_delay, "output/kyiv_speeds_delay.RDS")

@@ -150,7 +150,7 @@ save(
   railway,
   metro_lines,
   metro_stops,
-  file = paste0("data/",name, "_osm.RData"))
+  file = paste0("output/",name, "_osm.RData"))
 
 
 
