@@ -1,2 +1,0 @@
-output/kyiv_speeds_delay.RDS filter=lfs diff=lfs merge=lfs -text
-kyiv_speeds_delay.RDS filter=lfs diff=lfs merge=lfs -text

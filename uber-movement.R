@@ -67,8 +67,11 @@ speeds <- speeds_import %>%
 mean_speed <- mean(speeds$speed_kph_mean)
 
 speeds_max <- speeds %>% 
-  filter(wday(timestamp) %in% c(1,7)) %>% 
-  mutate(date = as.Date(timestamp)) %>% 
+  filter(wday(timestamp) %in% c(1,7) & 
+           hour(timestamp) >= 6 &
+           hour(timestamp) <= 22
+  ) %>% 
+  mutate(date = date(timestamp)) %>% 
   group_by(index, date) %>% 
   summarise(max_speed = max(speed_kph_mean)) %>% 
   ungroup() %>% 
@@ -80,5 +83,7 @@ speeds_delay <- speeds %>%
   inner_join(speeds_max, by = "index") %>% 
   mutate(best_time = if_else(max_speed < speed_kph_mean, time, length/max_speed),
          delay = time - best_time)
-
-saveRDS(speeds_delay, "output/kyiv_speeds_delay.RDS")
+speeds_delay_light <- speeds_delay %>% 
+  select(index, timestamp, year:hour, speed_kph_mean, time, best_time, delay)
+  
+saveRDS(speeds_delay_light, "output/kyiv_speeds_delay_light.RDS")
