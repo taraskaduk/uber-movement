@@ -83,7 +83,15 @@ speeds_delay <- speeds %>%
   inner_join(speeds_max, by = "index") %>% 
   mutate(best_time = if_else(max_speed < speed_kph_mean, time, length/max_speed),
          delay = time - best_time)
+
 speeds_delay_light <- speeds_delay %>% 
-  select(index, timestamp, year:hour, speed_kph_mean, time, best_time, delay)
-  
-saveRDS(speeds_delay_light, "output/kyiv_speeds_delay_light.RDS")
+  select(index, timestamp, year:hour, speed_kph_mean, length, time, best_time, delay)
+
+for (m in 1:3){
+  saveRDS(speeds_delay_light %>% 
+            filter(month == m & day <=15),
+          paste0("output/kyiv_speeds_delay_",m,"_1.RDS"))
+  saveRDS(speeds_delay_light %>% 
+            filter(month == m & day > 15),
+          paste0("output/kyiv_speeds_delay_",m,"_2.RDS"))
+}
